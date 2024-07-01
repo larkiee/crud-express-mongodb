@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_PORT=${APP_PORT}
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - APP_PORT=${APP_PORT}
+    depends_on:
+     - mongo
+    ports:
+      - "5200:5200"
+    networks:
+      raya-net:
+        aliases:
+          - app
+  mongo:
+    image: mongo
+    ports:
+      - "27055:27017"
+    networks:
+      raya-net:
+          aliases:
+            - mongodb
+    volumes:
+      - "mongo-data:/data/db"
+    
+networks:
+  raya-net:
+    driver: bridge
+  
+volumes:
+  mongo-data:
